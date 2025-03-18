@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 'monetdb'
+  labels:
+    component: 'monetdb'
+spec:
+  selector:
+    matchLabels:
+      component: 'monetdb'
+  template:
+    metadata:
+      labels:
+        component: 'monetdb'
+    spec:
+      volumes:
+      - name: volume-dbfarm
+        persistentVolumeClaim:
+          claimName: 'monetdb-dbfarm'
+      - name: volume-snapshot
+        persistentVolumeClaim:
+          claimName: 'monetdb-snapshot' 
+      - name: volume-log-dir
+        emptyDir: {}
+      - name: volume-temp-dir
+        emptyDir: {}
+      containers:
+        - name: monetdb-engine
+          image: 'docker.io/monetdb/monetdb'
+          ports:
+          - name: http
+            containerPort: 50000
+            protocol: TCP
+          envFrom: 
+          - configMapRef:
+              name: 'monetdb-config'
+          - secretRef:
+              name: 'monetdb-secret'
+          volumeMounts:
+          - name: volume-dbfarm
+            mountPath: /mnt/monetdbfarm
+          - name: volume-snapshot
+            mountPath: /mnt/monetsnapshot
+

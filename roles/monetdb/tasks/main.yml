@@ -1,2 +1,7 @@
 ---
-# tasks file for MonetDb
+- name: Deploy ConfigMap
+  include_tasks: configmap.yml
+
+- name: Deploy Secret2
+  include_tasks: secret.yml
+

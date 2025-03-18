@@ -1,2 +1,9 @@
 ---
 # defaults file for MonetDb
+database: 'ocpdb'
+
+app_name: 'monetdb'
+meta:
+  labels:
+    managenby: 'monetdb-operator'
+    name: 'monetdb'

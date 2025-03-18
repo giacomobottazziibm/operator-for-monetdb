@@ -4,4 +4,5 @@
   group: monetdb.monetdb.ibm.com
   kind: MonetDb
   role: monetdb
+  playbook: playbooks/monetdbplaybook.yml
 # +kubebuilder:scaffold:watch
