@@ -1,0 +1,7 @@
+---
+# Use the 'create api' subcommand to add watches to this file.
+- version: v1
+  group: monetdb.monetdb.ibm.com
+  kind: MonetDb
+  role: monetdb
+# +kubebuilder:scaffold:watch
