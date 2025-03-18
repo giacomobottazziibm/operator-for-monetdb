@@ -1,7 +1,10 @@
 ---
 # defaults file for MonetDb
 database: 'ocpdb'
-
+storage:
+  size: 1
+  class: ''
+  
 app_name: 'monetdb'
 meta:
   labels:

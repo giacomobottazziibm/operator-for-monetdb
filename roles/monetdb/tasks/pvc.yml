@@ -1,24 +1,12 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: monetdb-dbfarm
-spec:
-  accessModes:
-    - ReadWriteOnce
-  volumeMode: Filesystem
-  resources:
-    requests:
-      storage: 1Gi
+---
+- name: create Pm Pvc for Mongo
+  kubernetes.core.k8s:
+    state: present
+    force: False
+    definition: "{{ lookup('template', '../templates/pvcdbfarm.j2', convert_data='no') }}"
 
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: monetdb-snapshot
-spec:
-  accessModes:
-    - ReadWriteOnce
-  volumeMode: Filesystem
-  resources:
-    requests:
-      storage: 1Gi
+- name: create Pm Pvc for Mongo
+  kubernetes.core.k8s:
+    state: present
+    force: False
+    definition: "{{ lookup('template', '../templates/pvcsnapshot.j2', convert_data='no') }}"
