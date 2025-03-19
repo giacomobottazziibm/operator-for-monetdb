@@ -1,44 +1,67 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: 'monetdb'
-  labels:
-    component: 'monetdb'
-spec:
-  selector:
-    matchLabels:
-      component: 'monetdb'
-  template:
-    metadata:
-      labels:
-        component: 'monetdb'
-    spec:
-      volumes:
-      - name: volume-dbfarm
-        persistentVolumeClaim:
-          claimName: 'monetdb-dbfarm'
-      - name: volume-snapshot
-        persistentVolumeClaim:
-          claimName: 'monetdb-snapshot' 
-      - name: volume-log-dir
-        emptyDir: {}
-      - name: volume-temp-dir
-        emptyDir: {}
-      containers:
-        - name: monetdb-engine
-          image: 'docker.io/monetdb/monetdb'
-          ports:
-          - name: http
-            containerPort: 50000
-            protocol: TCP
-          envFrom: 
-          - configMapRef:
-              name: 'monetdb-config'
-          - secretRef:
-              name: 'monetdb-secret'
-          volumeMounts:
-          - name: volume-dbfarm
-            mountPath: /mnt/monetdbfarm
-          - name: volume-snapshot
-            mountPath: /mnt/monetsnapshot
+---
+- name: create configmap webapp
+  kubernetes.core.k8s:
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: '{{ ansible_operator_meta.name }}-monetdb'
+        namespace: '{{ ansible_operator_meta.namespace }}'
+        labels:
+          component: 'monetdb'
+          app.kubernetes.io/instance: '{{ ansible_operator_meta.name }}'
+          app.kubernetes.io/managed-by: '{{ meta.labels.managenby }}'
+          app.kubernetes.io/name: '{{ meta.labels.name }}'
+      spec:
+        selector:
+          matchLabels:
+            component: 'monetdb'
+        template:
+          metadata:
+            labels:
+              component: 'monetdb'
+              app.kubernetes.io/instance: '{{ ansible_operator_meta.name }}'
+              app.kubernetes.io/managed-by: '{{ meta.labels.managenby }}'
+              app.kubernetes.io/name: '{{ meta.labels.name }}'
+          spec:
+            serviceAccountName: monetdb-service-account
+            hostNetwork: false
+            hostPID: false
+            hostIPC: false
+            securityContext:
+              allowPrivilegeEscalation: false
+              privileged: false
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              capabilities:
+                drop:
+                - ALL
+            volumes:
+            - name: volume-dbfarm
+              persistentVolumeClaim:
+                claimName: '{{ ansible_operator_meta.name }}-monetdb-dbfarm'
+            - name: volume-snapshot
+              persistentVolumeClaim:
+                claimName: '{{ ansible_operator_meta.name }}-monetdb-snapshot' 
+            - name: volume-log-dir
+              emptyDir: {}
+            - name: volume-temp-dir
+              emptyDir: {}
+            containers:
+              - name: monetdb-engine
+                image: '{{ image }}'
+                ports:
+                - name: http
+                  containerPort: 50000
+                  protocol: TCP
+                envFrom: 
+                - configMapRef:
+                    name: '{{ ansible_operator_meta.name }}-monetdb-config'
+                - secretRef:
+                    name: '{{ ansible_operator_meta.name }}-monetdb-secret'
+                volumeMounts:
+                - name: volume-dbfarm
+                  mountPath: /mnt/monetdbfarm
+                - name: volume-snapshot
+                  mountPath: /mnt/monetsnapshot
 

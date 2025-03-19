@@ -64,6 +64,35 @@ rules:
       - update
       - watch
   - apiGroups:
+      - route.openshift.io
+    resources:
+      - routes
+      - routes.route.openshift.io
+      - routes/custom-host
+      - routes.route.openshift.io/custom-host
+      - routes/status
+      - routes.route.openshift.io/status
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
       - rbac.authorization.k8s.io
     resources:
       - roles

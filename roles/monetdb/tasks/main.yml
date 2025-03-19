@@ -5,5 +5,14 @@
 - name: Deploy Secret
   include_tasks: secret.yml
 
+- name: Deploy security
+  include_tasks: "security/main.yml"
+
 - name: Deploy Pvc
   include_tasks: pvc.yml
+
+- name: Deploy Pod
+  include_tasks: deployment.yml
+
+- name: Deploy Service
+  include_tasks: service.yml
