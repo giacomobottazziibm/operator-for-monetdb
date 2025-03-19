@@ -64,4 +64,27 @@
                   mountPath: /mnt/monetdbfarm
                 - name: volume-snapshot
                   mountPath: /mnt/monetsnapshot
-
+                startupProbe:
+                    tcpSocket:
+                      port: 50000
+                    initialDelaySeconds: 25
+                    periodSeconds: 20
+                livenessProbe:
+                    tcpSocket:
+                      port: 50000
+                    initialDelaySeconds: 25
+                    periodSeconds: 20
+                readinessProbe:
+                    tcpSocket:
+                      port: 50000
+                    initialDelaySeconds: 25
+                    periodSeconds: 20
+            affinity:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                    - matchExpressions:
+                      - key: kubernetes.io/arch
+                        operator: In
+                        values:
+                        - amd64

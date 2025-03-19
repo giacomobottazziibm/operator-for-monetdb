@@ -24,4 +24,4 @@
               port: 50000
               targetPort: 50000
           selector:
-            component: '{{ ansible_operator_meta.name }}-monetdb'
+            component: 'monetdb'
